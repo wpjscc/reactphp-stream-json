@@ -283,7 +283,7 @@ final class JsonStream extends EventEmitter implements ReadableStreamInterface
          * @phpstan-ignore-next-line
          * @psalm-suppress UndefinedInterfaceMethod
          */
-        $this->formatValue($item['value'])->done(function (): void {
+        $this->formatValue($item['value'])->then(function (): void {
             $this->currentId = null;
             $this->nextItem();
         });
@@ -337,7 +337,7 @@ final class JsonStream extends EventEmitter implements ReadableStreamInterface
 
         $this->emitData($this->encode($value));
 
-        return resolve();
+        return resolve(null);
     }
 
     private function handleObservable(Observable $value): PromiseInterface
@@ -373,7 +373,7 @@ final class JsonStream extends EventEmitter implements ReadableStreamInterface
         $buffer = $bufferingStream->takeOverBuffer();
         $this->emitData($buffer);
         if ($isDone) {
-            return resolve();
+            return resolve(null);
         }
 
         /** @psalm-suppress MissingClosureParamType */
@@ -398,7 +398,7 @@ final class JsonStream extends EventEmitter implements ReadableStreamInterface
         if ($isDone) {
             $this->emitData('"');
 
-            return resolve();
+            return resolve(null);
         }
 
         /** @psalm-suppress MissingClosureParamType */
@@ -408,7 +408,7 @@ final class JsonStream extends EventEmitter implements ReadableStreamInterface
         $deferred = new Deferred();
         $stream->once('close', function () use ($deferred): void {
             $this->emitData('"');
-            $deferred->resolve();
+            $deferred->resolve(null);
         });
 
         return $deferred->promise();
