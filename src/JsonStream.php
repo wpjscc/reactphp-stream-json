@@ -382,7 +382,7 @@ final class JsonStream extends EventEmitter implements ReadableStreamInterface
         });
         $deferred = new Deferred();
         $stream->once('close', static function () use ($deferred): void {
-            $deferred->resolve();
+            $deferred->resolve(null);
         });
 
         return $deferred->promise();
